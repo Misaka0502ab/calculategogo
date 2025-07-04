@@ -8,57 +8,33 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <style>
-    .top-navbar {
-        background: #2c3e50;
-        padding: 15px 0;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-    .nav-menu {
-        max-width: 1200px;
-        margin: 0 auto;
+    .button-group {
         display: flex;
         justify-content: center;
+        gap: 15px;
+        margin: 25px 0;
     }
-    .nav-item {
-        margin: 0 20px;
-        position: relative;
-    }
-    .nav-item a {
+    .nav-button {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
         color: white;
-        text-decoration: none;
-        font-weight: 500;
-        padding: 5px 0;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s;
     }
-    .nav-item a:after {
-        content: '';
-        position: absolute;
-        width: 0;
-        height: 2px;
-        background: #3498db;
-        bottom: 0;
-        left: 0;
-        transition: width 0.3s;
+    .nav-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
-    .nav-item a:hover:after {
-        width: 100%;
-    }
-    </style>
+</style>
 
-<nav class="top-navbar">
-    <div class="nav-menu">
-        <div class="nav-item">
-            <a href="https://misaka0502ab.github.io/calculategogo/">主计算器</a>
-        </div>
-        <div class="nav-item">
-            <a href="https://misaka0502ab.github.io/AF/">空运报价</a>
-        </div>
-        <div class="nav-item">
-            <a href="https://misaka0502ab.github.io/AFHKG/">香港专线</a>
-        </div>
-    </div>
-</nav>
+<div class="button-group">
+    <a href="https://misaka0502ab.github.io/AF/" class="nav-button">空运报价系统</a>
+    <a href="https://misaka0502ab.github.io/AFHKG/" class="nav-button">香港专线报价</a>
+</div>
     
     <a href="https://www.track-trace.com/" target="_blank" style="
   display: inline-block;
