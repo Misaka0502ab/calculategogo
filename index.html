@@ -6,6 +6,60 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="manifest" href="site.webmanifest">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+    .top-navbar {
+        background: #2c3e50;
+        padding: 15px 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .nav-menu {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+    }
+    .nav-item {
+        margin: 0 20px;
+        position: relative;
+    }
+    .nav-item a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 5px 0;
+    }
+    .nav-item a:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        background: #3498db;
+        bottom: 0;
+        left: 0;
+        transition: width 0.3s;
+    }
+    .nav-item a:hover:after {
+        width: 100%;
+    }
+    </style>
+
+<nav class="top-navbar">
+    <div class="nav-menu">
+        <div class="nav-item">
+            <a href="https://misaka0502ab.github.io/calculategogo/">主计算器</a>
+        </div>
+        <div class="nav-item">
+            <a href="https://misaka0502ab.github.io/AF/">空运报价</a>
+        </div>
+        <div class="nav-item">
+            <a href="https://misaka0502ab.github.io/AFHKG/">香港专线</a>
+        </div>
+    </div>
+</nav>
+    
     <a href="https://www.track-trace.com/" target="_blank" style="
   display: inline-block;
   padding: 10px 20px;
