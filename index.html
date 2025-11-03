@@ -179,7 +179,7 @@
             </tr>
             <tr>
                 <td>USD/RMB汇率</td>
-                <td><input type="number" id="exchangeRate" step="0.0001" value="7.1" placeholder="输入汇率"></td>
+                <td><input type="number" id="exchangeRate" step="0.0001" value="7.08" placeholder="输入汇率"></td>
                 
                 <td>成本计费重 (kg)</td>
                 <td class="result" id="costWeight">-</td>
@@ -231,7 +231,7 @@
         // 获取输入值
         const volume = parseFloat(document.getElementById('volume').value) || 0;
         const gw = parseFloat(document.getElementById('gw').value) || 0;
-        const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 7.1;
+        const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 7.08;
         const rmbPerKg = parseFloat(document.getElementById('rmbPerKg').value) || 0;
 
         // 计算C.W. (计费重量)
@@ -272,5 +272,6 @@
 </script>
 </body>
 </html>
+
 
 
