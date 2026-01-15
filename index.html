@@ -37,25 +37,38 @@
         box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
 
-    /* 分泡比例选项样式 */
+    /* 计费标准+分泡比例 并列容器（恢复原尺寸） */
+    .billing-bubble-container {
+        display: flex;
+        gap: 15px; /* 恢复原间距 */
+        margin: 15px 0; /* 恢复原间距 */
+        width: 100%;
+        flex-wrap: wrap; /* 移动端自动换行 */
+    }
+    .billing-section, .bubble-section {
+        flex: 1; /* 平分宽度 */
+        min-width: 200px; /* 移动端最小宽度 */
+    }
+
+    /* 分泡比例/计费标准选项样式 - 恢复到缩小前的原尺寸 */
     .option-group {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-        margin: 15px 0;
-        padding: 10px;
+        gap: 8px; /* 恢复原间距 */
+        margin: 10px 0; /* 恢复原间距 */
+        padding: 8px; /* 恢复原内边距 */
         background-color: #f9f9f9;
-        border-radius: 6px;
+        border-radius: 6px; /* 恢复原圆角 */
     }
     .option-group label {
         display: flex;
         align-items: center;
-        gap: 5px;
-        padding: 8px 15px;
+        gap: 5px; /* 恢复原间距 */
+        padding: 6px 12px; /* 恢复原内边距 */
         border: 1px solid #ddd;
-        border-radius: 4px;
+        border-radius: 4px; /* 恢复原圆角 */
         cursor: pointer;
-        font-size: 14px;
+        font-size: 13px; /* 恢复原字体大小 */
         transition: all 0.2s;
         background-color: white;
     }
@@ -66,10 +79,12 @@
     .option-group input[type="radio"] {
         width: auto;
         margin: 0;
+        transform: scale(0.9); /* 恢复原单选框大小 */
     }
     .option-group input[type="radio"]:checked + span {
         font-weight: bold;
         color: #3498db;
+        font-size: 13px; /* 恢复原选中字体大小 */
     }
     .hidden {
         display: none !important;
@@ -211,7 +226,8 @@
         .section-title {
             font-weight: bold;
             color: #16a085;
-            margin: 20px 0 10px 0;
+            margin: 15px 0 8px 0; /* 恢复原标题间距 */
+            font-size: 15px; /* 恢复原标题字体大小 */
         }
     </style>
 </head>
@@ -219,6 +235,7 @@
     <h1>空运成本计算器（分泡版）</h1>
     
     <div class="calculator">
+        <!-- 基础参数区域 -->
         <div class="section-title">基础参数</div>
         <table>
             <tr>
@@ -241,50 +258,7 @@
             </tr>
         </table>
 
-        <!-- 计费标准选择 -->
-        <div class="section-title">计费标准</div>
-        <div class="option-group">
-            <label>
-                <input type="radio" name="billing" value="0.006" checked>
-                <span>大陆 (1m³=167kg)</span>
-            </label>
-            <label>
-                <input type="radio" name="billing" value="0.007">
-                <span>香港 (1m³=143kg)</span>
-            </label>
-        </div>
-
-        <!-- 分泡比例选择（已移除“不分”选项） -->
-        <div class="section-title">分泡比例</div>
-        <div class="option-group" id="mainlandBubble">
-            <label>
-                <input type="radio" name="bubble" value="0.5" checked>
-                <span>55分</span>
-            </label>
-            <label>
-                <input type="radio" name="bubble" value="0.4">
-                <span>46分</span>
-            </label>
-            <label>
-                <input type="radio" name="bubble" value="0.3">
-                <span>37分</span>
-            </label>
-            <label>
-                <input type="radio" name="bubble" value="0.2">
-                <span>28分</span>
-            </label>
-        </div>
-        <div class="option-group hidden" id="hongkongBubble">
-            <label>
-                <input type="radio" name="bubbleHk" value="0.3333" checked>
-                <span>1/3</span>
-            </label>
-            <label>
-                <input type="radio" name="bubbleHk" value="0.6667">
-                <span>2/3</span>
-            </label>
-        </div>
-
+        <!-- 成本计算区域 -->
         <div class="section-title">成本计算</div>
         <table>
             <tr>
@@ -301,6 +275,7 @@
             </tr>
         </table>
 
+        <!-- 总成本区域 -->
         <div class="section-title">总成本</div>
         <table>
             <tr>
@@ -314,7 +289,59 @@
                 <td class="result" id="totalUSD">-</td>
             </tr>
         </table>
+
+        <!-- 移到最下方的计费标准+分泡比例并列区域 -->
+        <div class="billing-bubble-container">
+            <!-- 计费标准选择 -->
+            <div class="billing-section">
+                <div class="section-title">计费标准</div>
+                <div class="option-group">
+                    <label>
+                        <input type="radio" name="billing" value="0.006" checked>
+                        <span>大陆 (1m³=167kg)</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="billing" value="0.007">
+                        <span>香港 (1m³=143kg)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 分泡比例选择 -->
+            <div class="bubble-section">
+                <div class="section-title">分泡比例</div>
+                <div class="option-group" id="mainlandBubble">
+                    <label>
+                        <input type="radio" name="bubble" value="0.5" checked>
+                        <span>55分</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="bubble" value="0.4">
+                        <span>46分</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="bubble" value="0.3">
+                        <span>37分</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="bubble" value="0.2">
+                        <span>28分</span>
+                    </label>
+                </div>
+                <div class="option-group hidden" id="hongkongBubble">
+                    <label>
+                        <input type="radio" name="bubbleHk" value="0.3333" checked>
+                        <span>1/3</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="bubbleHk" value="0.6667">
+                        <span>2/3</span>
+                    </label>
+                </div>
+            </div>
+        </div>
         
+        <!-- 计算按钮 -->
         <button onclick="calculate()">计算所有结果</button>
     </div>
 
@@ -342,7 +369,7 @@
                 // 获取计费标准（大陆/香港）
                 const billing = parseFloat(document.querySelector('input[name="billing"]:checked').value) || 0.006;
                 
-                // 获取分泡比例（已无“不分”选项，无需处理0值）
+                // 获取分泡比例
                 let bubble = 0;
                 if (billing === 0.006) {
                     // 大陆分泡比例（默认55分）
