@@ -13,6 +13,7 @@
         justify-content: center;
         gap: 15px;
         margin: 25px 0;
+        flex-wrap: wrap;
     }
     .nav-button {
         padding: 10px 20px;
@@ -35,59 +36,104 @@
         transform: translateY(-3px);
         box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
-</style>
 
-<div class="button-group">
-    <a href="https://misaka0502ab.github.io/AF/" class="nav-button">大陆空运报价</a>
-    <a href="https://misaka0502ab.github.io/AFHKG/" class="nav-button">香港空运报价</a>
-</div>
+    /* 分泡比例选项样式 */
+    .option-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 15px 0;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 6px;
+    }
+    .option-group label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+        background-color: white;
+    }
+    .option-group label:hover {
+        border-color: #3498db;
+        background-color: #f0f7ff;
+    }
+    .option-group input[type="radio"] {
+        width: auto;
+        margin: 0;
+    }
+    .option-group input[type="radio"]:checked + span {
+        font-weight: bold;
+        color: #3498db;
+    }
+    .hidden {
+        display: none !important;
+    }
+    </style>
+
+    <div class="button-group">
+        <a href="https://misaka0502ab.github.io/AF/" class="nav-button">大陆空运报价</a>
+        <a href="https://misaka0502ab.github.io/AFHKG/" class="nav-button">香港空运报价</a>
+    </div>
     
- <a href="https://www.track-trace.com/" target="_blank" style="
-  display: inline-block;
-  padding: 10px 20px;
-  background: #0066cc;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;">
-  <i class="fa fa-truck"></i> 物流跟踪查询
-</a>
+    <a href="https://www.track-trace.com/" target="_blank" style="
+      display: inline-block;
+      padding: 10px 20px;
+      background: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 5px;
+    ">
+      <i class="fa fa-truck"></i> 物流跟踪查询
+    </a>
 
-<a href="https://misaka0502ab.github.io/cargodata/" target="_blank" style="
-  display: inline-block;
-  padding: 10px 20px;
-  background: #0066cc;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;">
-  <i class="fa fa-truck"></i> 数据转换器
-</a>
+    <a href="https://misaka0502ab.github.io/cargodata/" target="_blank" style="
+      display: inline-block;
+      padding: 10px 20px;
+      background: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 5px;
+    ">
+      <i class="fa fa-truck"></i> 数据转换器
+    </a>
 
-<a href="https://map.baidu.com" target="_blank" style="
-  display: inline-block;
-  padding: 10px 20px;
-  background: #0066cc;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;">
-  <i class="fa fa-truck"></i> 百度地图
-</a>
+    <a href="https://map.baidu.com" target="_blank" style="
+      display: inline-block;
+      padding: 10px 20px;
+      background: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 5px;
+    ">
+      <i class="fa fa-truck"></i> 百度地图
+    </a>
 
-<a href="https://www.bing.com/maps" target="_blank" style="
-  display: inline-block;
-  padding: 10px 20px;
-  background: #0066cc;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;">
-  <i class="fa fa-truck"></i> Bing地图
-</a>
+    <a href="https://www.bing.com/maps" target="_blank" style="
+      display: inline-block;
+      padding: 10px 20px;
+      background: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 5px;
+    ">
+      <i class="fa fa-truck"></i> Bing地图
+    </a>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>空运成本计算器（五五分泡版）</title>
+    <title>空运成本计算器（分泡版）</title>
     <style>
-        
         body {
             font-family: 'Microsoft YaHei', Arial, sans-serif;
             line-height: 1.6;
@@ -170,7 +216,7 @@
     </style>
 </head>
 <body>
-    <h1>空运成本计算器（五五分泡版）</h1>
+    <h1>空运成本计算器（分泡版）</h1>
     
     <div class="calculator">
         <div class="section-title">基础参数</div>
@@ -190,103 +236,162 @@
             <tr>
                 <td>USD/RMB汇率</td>
                 <td><input type="number" id="exchangeRate" step="0.0001" value="6.95" placeholder="输入汇率"></td>
-                
                 <td>成本计费重 (kg)</td>
                 <td class="result" id="costWeight">-</td>
             </tr>
         </table>
+
+        <!-- 计费标准选择 -->
+        <div class="section-title">计费标准</div>
+        <div class="option-group">
+            <label>
+                <input type="radio" name="billing" value="0.006" checked>
+                <span>大陆 (1m³=167kg)</span>
+            </label>
+            <label>
+                <input type="radio" name="billing" value="0.007">
+                <span>香港 (1m³=143kg)</span>
+            </label>
+        </div>
+
+        <!-- 分泡比例选择（已移除“不分”选项） -->
+        <div class="section-title">分泡比例</div>
+        <div class="option-group" id="mainlandBubble">
+            <label>
+                <input type="radio" name="bubble" value="0.5" checked>
+                <span>55分</span>
+            </label>
+            <label>
+                <input type="radio" name="bubble" value="0.4">
+                <span>46分</span>
+            </label>
+            <label>
+                <input type="radio" name="bubble" value="0.3">
+                <span>37分</span>
+            </label>
+            <label>
+                <input type="radio" name="bubble" value="0.2">
+                <span>28分</span>
+            </label>
+        </div>
+        <div class="option-group hidden" id="hongkongBubble">
+            <label>
+                <input type="radio" name="bubbleHk" value="0.3333" checked>
+                <span>1/3</span>
+            </label>
+            <label>
+                <input type="radio" name="bubbleHk" value="0.6667">
+                <span>2/3</span>
+            </label>
+        </div>
 
         <div class="section-title">成本计算</div>
         <table>
             <tr>
                 <td>成本空运费RMB/KG</td>
                 <td><input type="number" id="rmbPerKg" step="0.01" placeholder="输入RMB单价"></td>
-                
                 <td>分泡后RMB/KG</td>
                 <td class="result" id="rmbAfter">-</td>
             </tr>
             <tr>
-    <td>成本空运费USD/KG</td>
-    <td class="result" id="usdPerKg">-</td>
-   
-    <td>分泡后USD/KG</td>
-    <td class="result" id="usdAfter">-</td>
-</tr>
+                <td>成本空运费USD/KG</td>
+                <td class="result" id="usdPerKg">-</td>
+                <td>分泡后USD/KG</td>
+                <td class="result" id="usdAfter">-</td>
+            </tr>
         </table>
 
         <div class="section-title">总成本</div>
         <table>
             <tr>
                 <td colspan="2"></td>
-                
                 <td>空运总成本RMB</td>
                 <td class="result" id="totalRMB">-</td>
             </tr>
             <tr>
                 <td colspan="2"></td>
-                
                 <td>空运总成本USD</td>
                 <td class="result" id="totalUSD">-</td>
             </tr>
         </table>
         
         <button onclick="calculate()">计算所有结果</button>
-        
-       
     </div>
 
     <script>
-    function calculate() {
-    try {
-        // 获取输入值
-        const volume = parseFloat(document.getElementById('volume').value) || 0;
-        const gw = parseFloat(document.getElementById('gw').value) || 0;
-        const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 6.95;
-        const rmbPerKg = parseFloat(document.getElementById('rmbPerKg').value) || 0;
+        // 初始化：绑定计费标准切换事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const billingRadios = document.querySelectorAll('input[name="billing"]');
+            billingRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const isMainland = this.value === "0.006";
+                    document.getElementById('mainlandBubble').classList.toggle('hidden', !isMainland);
+                    document.getElementById('hongkongBubble').classList.toggle('hidden', isMainland);
+                });
+            });
+        });
 
-        // 计算C.W. (计费重量)
-        const cw = volume / 0.006;
-        document.getElementById('cw').textContent = cw.toFixed(2);
+        function calculate() {
+            try {
+                // 获取输入值
+                const volume = parseFloat(document.getElementById('volume').value) || 0;
+                const gw = parseFloat(document.getElementById('gw').value) || 0;
+                const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 6.95;
+                const rmbPerKg = parseFloat(document.getElementById('rmbPerKg').value) || 0;
 
-        // 计算比例 (GW/体积)
-        const ratio = volume > 0 ? gw / volume : 0;
-        document.getElementById('ratio').textContent = ratio.toFixed(4);
+                // 获取计费标准（大陆/香港）
+                const billing = parseFloat(document.querySelector('input[name="billing"]:checked').value) || 0.006;
+                
+                // 获取分泡比例（已无“不分”选项，无需处理0值）
+                let bubble = 0;
+                if (billing === 0.006) {
+                    // 大陆分泡比例（默认55分）
+                    bubble = parseFloat(document.querySelector('input[name="bubble"]:checked').value) || 0.5;
+                } else {
+                    // 香港分泡比例（默认1/3）
+                    bubble = parseFloat(document.querySelector('input[name="bubbleHk"]:checked').value) || 0.3333;
+                }
 
-        // 计算成本计费重 (分泡后重量)
-        const costWeight = (cw - gw) / 2 + gw;
-        document.getElementById('costWeight').textContent = costWeight.toFixed(2);
+                // 验证输入
+                if (volume <= 0 || gw <= 0 || rmbPerKg <= 0) {
+                    alert("请填写有效的体积、实际重量和RMB单价（均需大于0）");
+                    return;
+                }
 
-        // 计算成本空运费USD/KG (RMB/KG ÷ 汇率)
-        const costUsdPerKg = exchangeRate > 0 ? rmbPerKg / exchangeRate : 0;
-        document.getElementById('usdPerKg').textContent = costUsdPerKg.toFixed(4);
+                // 计算C.W. (计费重量)
+                const cw = volume / billing;
+                document.getElementById('cw').textContent = cw.toFixed(2);
 
-        // 计算总成本
-        const totalRMB = costWeight * rmbPerKg;
-        const totalUSD = costWeight * costUsdPerKg;
-        document.getElementById('totalRMB').textContent = totalRMB.toFixed(2);
-        document.getElementById('totalUSD').textContent = totalUSD.toFixed(2);
+                // 计算比例 (GW/体积)
+                const ratio = volume > 0 ? gw / volume : 0;
+                document.getElementById('ratio').textContent = ratio.toFixed(4);
 
-        // === 修正分泡后单价公式 ===
-        // 分泡后RMB/KG = 总空运成本RMB / C.W.
-        const rmbAfter = cw > 0 ? totalRMB / cw : 0;
-        document.getElementById('rmbAfter').textContent = rmbAfter.toFixed(4);
+                // 计算成本计费重 (分泡后重量)
+                // 公式：成本计费重 = 实际重量 + (计费重量 - 实际重量) × 分泡比例
+                const costWeight = gw + (cw - gw) * bubble;
+                document.getElementById('costWeight').textContent = costWeight.toFixed(2);
 
-        // 分泡后USD/KG = 总空运成本USD / C.W.
-        const usdAfter = cw > 0 ? totalUSD / cw : 0;
-        document.getElementById('usdAfter').textContent = usdAfter.toFixed(4);
+                // 计算成本空运费USD/KG (RMB/KG ÷ 汇率)
+                const costUsdPerKg = exchangeRate > 0 ? rmbPerKg / exchangeRate : 0;
+                document.getElementById('usdPerKg').textContent = costUsdPerKg.toFixed(4);
 
-    } catch (e) {
-        alert("计算错误: " + e.message);
-    }
-}
-</script>
+                // 计算总成本
+                const totalRMB = costWeight * rmbPerKg;
+                const totalUSD = costWeight * costUsdPerKg;
+                document.getElementById('totalRMB').textContent = totalRMB.toFixed(2);
+                document.getElementById('totalUSD').textContent = totalUSD.toFixed(2);
+
+                // 计算分泡后单价
+                const rmbAfter = cw > 0 ? totalRMB / cw : 0;
+                document.getElementById('rmbAfter').textContent = rmbAfter.toFixed(4);
+
+                const usdAfter = cw > 0 ? totalUSD / cw : 0;
+                document.getElementById('usdAfter').textContent = usdAfter.toFixed(4);
+
+            } catch (e) {
+                alert("计算错误: " + e.message);
+            }
+        }
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
