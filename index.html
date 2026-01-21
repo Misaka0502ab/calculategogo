@@ -25,43 +25,54 @@
             padding: 20px 15px; /* 上下padding增加，适配6.67英寸 */
             background-color: #f5f5f5;
             font-size: 16px; /* 基准字体放大，适配高分辨率 */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 整体内容居中 */
             }
             h1 {
             color: #2c3e50;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px; /* 缩小标题下方间距 */
             padding-bottom: 12px;
             border-bottom: 2px solid #3498db;
             font-size: 20px; /* 标题放大 */
             font-weight: bold;
+            width: 100%;
+            max-width: 600px; /* 标题最大宽度适配A4感 */
             }
-            .calculator {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 20px; /* 内边距放大 */
-            margin-bottom: 25px;
+            /* 物流工具按钮容器 - 适配A4宽度 */
+            .tool-buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start; /* 左对齐，按文本长度排版 */
+            gap: 8px; /* 缩小按钮间距 */
+            margin-bottom: 15px; /* 缩小底部间距 */
+            width: 100%;
+            max-width: 600px; /* 限制最大宽度，模拟A4 */
             }
-            /* 物流工具按钮（6.67英寸适配） */
             .tool-button {
             display: inline-block;
-            padding: 12px 18px; /* 按钮内边距放大 */
+            padding: 8px 12px; /* 大幅缩小内边距 */
             background: #0066cc;
             color: white;
             text-decoration: none;
-            border-radius: 8px;
-            margin: 6px;
-            font-size: 16px; /* 文字放大 */
-            width: calc(50% - 12px); /* 调整宽度，适配屏幕 */
+            border-radius: 6px; /* 缩小圆角 */
+            font-size: 14px; /* 缩小字体 */
+            white-space: nowrap; /* 防止文本换行 */
             text-align: center;
+            width: auto; 
+            flex: 0 0 auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 轻量阴影 */
             }
-            /* 智能识别输入框样式（小巧紧凑版） */
+            /* 智能识别输入框样式 - 适配A4宽度 */
             .smart-input-section {
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 1px 5px rgba(0,0,0,0.08);
             padding: 12px 15px; /* 大幅缩小内边距 */
             margin: 15px 0 20px 0; /* 调整上下间距 */
+            width: 100%;
+            max-width: 600px; /* 限制最大宽度 */
             }
             .smart-input-title {
             font-weight: bold;
@@ -78,76 +89,86 @@
             font-size: 15px; /* 缩小输入框字体 */
             height: 40px; /* 降低输入框高度 */
             background-color: #fafafa;
-            margin-bottom: 8px; /* 缩小输入框和按钮间距 */
+            margin-bottom: 0;
             }
-            .parse-btn {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 8px 10px; /* 缩小按钮内边距 */
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 15px; /* 缩小按钮字体 */
+            /* 核心：计算器容器 - 模拟A4纸效果 */
+            .calculator {
+            background-color: white;
+            border-radius: 12px; /* 更圆润的边角 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* 更有层次感的阴影 */
+            padding: 25px; 
+            margin-bottom: 25px;
             width: 100%;
-            height: 40px; /* 降低按钮高度 */
-            font-weight: bold;
-            line-height: 1; /* 紧凑行高 */
+            max-width: 600px; /* 核心：限制最大宽度为600px（接近A4宽度比例） */
+            /* A4纸质感 */
+            background-image: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+            border: 1px solid #eee;
             }
-            .parse-btn:hover {
-            background-color: #27ae60;
-            }
-            /* 表格（适配高分辨率） */
+            /* 表格（A4纸内的紧凑美观样式） */
             table {
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
-            font-size: 16px; /* 表格文字放大 */
+            font-size: 15px; /* 缩小表格字体，更紧凑 */
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden; /* 配合圆角 */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             }
             th, td {
-            border: 1px solid #ddd;
-            padding: 10px 8px; /* 单元格内边距放大 */
+            border: 1px solid #e0e0e0; /* 更浅的边框色 */
+            padding: 10px 12px; /* 优化单元格内边距 */
             text-align: left;
             }
-            /* 输入框（适配红米K70触控） */
+            td:first-child {
+            background-color: #f8f9fa; /* 首列浅灰底色，更易读 */
+            font-weight: 500;
+            }
+            /* 输入框（A4内的适配样式） */
             input {
             width: 100%;
-            padding: 12px; /* 输入框内边距放大 */
+            padding: 10px; /* 缩小内边距，更紧凑 */
             border: 1px solid #ddd;
             border-radius: 6px;
-            font-size: 16px; /* 输入文字放大 */
-            height: 48px; /* 输入框高度放大，适配手指点击 */
+            font-size: 15px; /* 缩小输入文字 */
+            height: 42px; /* 降低输入框高度 */
             background-color: #fafafa;
+            transition: border 0.2s;
+            }
+            input:focus {
+            border-color: #3498db; /* 聚焦时高亮边框 */
+            outline: none;
             }
             input::placeholder {
-            font-size: 15px; /* 提示文字放大 */
+            font-size: 14px; /* 缩小提示文字 */
             color: #999;
             }
             .result {
             font-weight: bold;
             color: #2980b9;
-            background-color: #f8f9fa;
+            background-color: #e8f4fd; /* 更清爽的结果底色 */
             text-align: center;
-            font-size: 16px; /* 结果文字放大 */
-            padding: 12px 0; /* 结果单元格内边距 */
+            font-size: 15px;
+            padding: 10px 0;
             }
-            /* 计费标准+分泡比例（6.67英寸适配） */
+            /* 计费标准+分泡比例（A4内的紧凑布局） */
             .billing-bubble-container {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             margin: 20px 0;
             width: 100%;
             flex-wrap: wrap;
             }
             .billing-section, .bubble-section {
             flex: 1;
-            min-width: 160px; /* 最小宽度放大 */
+            min-width: 200px; /* 优化最小宽度 */
             }
             .option-group {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             margin: 10px 0;
-            padding: 8px;
+            padding: 10px;
             background-color: #f9f9f9;
             border-radius: 8px;
             }
@@ -155,42 +176,50 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 10px 12px; /* 单选框标签内边距放大 */
+            padding: 8px 12px; /* 缩小单选框标签内边距 */
             border: 1px solid #ddd;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px; /* 单选框文字放大 */
+            font-size: 15px; /* 缩小单选框文字 */
             background-color: white;
+            transition: background-color 0.2s;
+            }
+            .option-group label:hover {
+            background-color: #f0f8ff; /* hover效果 */
             }
             .option-group input[type="radio"] {
-            width: 20px; /* 单选框大小放大 */
-            height: 20px;
+            width: 18px; /* 缩小单选框 */
+            height: 18px;
             margin: 0;
             padding: 0;
             }
-            /* 计算按钮（红米K70适配，放大点击区域） */
+            /* 计算按钮（A4内的美观样式） */
             button {
-            background-color: #3498db;
+            background: linear-gradient(to right, #3498db 0%, #2980b9 100%); /* 渐变背景 */
             color: white;
             border: none;
-            padding: 18px; /* 按钮内边距大幅放大 */
-            border-radius: 10px;
+            padding: 15px; 
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 18px; /* 按钮文字放大 */
+            font-size: 17px; 
             margin-top: 15px;
             width: 100%;
             font-weight: bold;
-            height: 60px; /* 按钮高度放大，适配单手点击 */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            height: 55px; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            transition: transform 0.1s, box-shadow 0.1s;
             }
             button:hover {
-            background-color: #2980b9;
+            transform: translateY(-2px); /* 轻微上浮 */
+            box-shadow: 0 5px 12px rgba(0,0,0,0.2);
             }
             .section-title {
             font-weight: bold;
             color: #16a085;
             margin: 15px 0 10px 0;
-            font-size: 18px; /* 区域标题放大 */
+            font-size: 17px; 
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee; /* 标题下的分隔线 */
             }
             .hidden {
             display: none !important;
@@ -200,24 +229,26 @@
     <body>
         <h1>空运成本计算器（分泡版）</h1>
 
-        <a href="https://www.track-trace.com/" target="_blank" class="tool-button">
-            物流跟踪查询
-        </a>
-        <a href="https://misaka0502ab.github.io/cargodata/" target="_blank" class="tool-button">
-            数据转换器
-        </a>
-        <a href="https://map.baidu.com" target="_blank" class="tool-button">
-            百度地图
-        </a>
-        <a href="https://www.bing.com/maps" target="_blank" class="tool-button">
-            Bing地图
-        </a>
+        <!-- 物流工具按钮容器 -->
+        <div class="tool-buttons-container">
+            <a href="https://www.track-trace.com/" target="_blank" class="tool-button">
+                物流跟踪查询
+            </a>
+            <a href="https://misaka0502ab.github.io/cargodata/" target="_blank" class="tool-button">
+                数据转换器
+            </a>
+            <a href="https://map.baidu.com" target="_blank" class="tool-button">
+                百度地图
+            </a>
+            <a href="https://www.bing.com/maps" target="_blank" class="tool-button">
+                Bing地图
+            </a>
+        </div>
 
         <!-- 智能识别输入区域 -->
         <div class="smart-input-section">
             <div class="smart-input-title">智能识别重量体积</div>
             <input type="text" class="smart-input-box" id="smartInput" placeholder="示例：1pcs / 250.0kgs / 0.75cbm">
-            <button class="parse-btn" onclick="parseSmartInput()">提取数据</button>
         </div>
 
         <div class="calculator">
@@ -324,30 +355,23 @@
         </div>
 
         <script>
-            // 智能识别解析函数
-            function parseSmartInput() {
+            // 自动识别函数
+            function autoParseSmartInput() {
                 try {
                     const inputText = document.getElementById('smartInput').value.trim();
                     if (!inputText) {
-                        alert("请输入需要识别的文本！");
                         return;
                     }
 
-                    // 正则提取重量（匹配xxx.xxkgs/kg/千克/公斤）
+                    // 正则提取重量
                     const weightRegex = /(\d+\.?\d*)\s*(?:kgs?|千克|公斤)/i;
                     const weightMatch = inputText.match(weightRegex);
                     const weight = weightMatch ? parseFloat(weightMatch[1]) : null;
 
-                    // 正则提取体积（匹配xxx.xxcbm/立方米/m³/m3）
+                    // 正则提取体积
                     const volumeRegex = /(\d+\.?\d*)\s*(?:cbm|立方米|m³|m3)/i;
                     const volumeMatch = inputText.match(volumeRegex);
                     const volume = volumeMatch ? parseFloat(volumeMatch[1]) : null;
-
-                    // 验证提取结果
-                    if (!weight && !volume) {
-                        alert("未识别到有效重量或体积，请检查输入格式！");
-                        return;
-                    }
 
                     // 填充到对应输入框
                     if (weight) {
@@ -357,81 +381,81 @@
                         document.getElementById('volume').value = volume.toFixed(3);
                     }
 
-                    // 提示成功
-                    const tips = [];
-                    if (weight) tips.push(`重量：${weight}kg`);
-                    if (volume) tips.push(`体积：${volume}m³`);
-                    alert(`识别成功！\n${tips.join('\n')}`);
-
                 } catch (e) {
-                    alert("识别失败：" + e.message);
+                    console.log("自动识别失败：" + e.message);
                 }
             }
 
-            // 计费标准切换
+            // 绑定输入框事件
             document.addEventListener('DOMContentLoaded', function() {
-            const billingRadios = document.querySelectorAll('input[name="billing"]');
-            billingRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-            const isMainland = this.value === "0.006";
-            document.getElementById('mainlandBubble').classList.toggle('hidden', !isMainland);
-            document.getElementById('hongkongBubble').classList.toggle('hidden', isMainland);
-            });
-            });
+                // 计费标准切换逻辑
+                const billingRadios = document.querySelectorAll('input[name="billing"]');
+                billingRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        const isMainland = this.value === "0.006";
+                        document.getElementById('mainlandBubble').classList.toggle('hidden', !isMainland);
+                        document.getElementById('hongkongBubble').classList.toggle('hidden', isMainland);
+                    });
+                });
+
+                // 绑定智能输入框的输入事件
+                const smartInput = document.getElementById('smartInput');
+                smartInput.addEventListener('input', autoParseSmartInput);
+                smartInput.addEventListener('blur', autoParseSmartInput);
             });
 
             // 核心计算逻辑
             function calculate() {
-            try {
-            const volume = parseFloat(document.getElementById('volume').value) || 0;
-            const gw = parseFloat(document.getElementById('gw').value) || 0;
-            const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 6.95;
-            const rmbPerKg = parseFloat(document.getElementById('rmbPerKg').value) || 0;
+                try {
+                    const volume = parseFloat(document.getElementById('volume').value) || 0;
+                    const gw = parseFloat(document.getElementById('gw').value) || 0;
+                    const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 6.95;
+                    const rmbPerKg = parseFloat(document.getElementById('rmbPerKg').value) || 0;
 
-            // 获取计费标准
-            const billing = parseFloat(document.querySelector('input[name="billing"]:checked').value) || 0.006;
+                    // 获取计费标准
+                    const billing = parseFloat(document.querySelector('input[name="billing"]:checked').value) || 0.006;
 
-            // 获取分泡比例
-            let bubble = 0;
-            if (billing === 0.006) {
-            bubble = parseFloat(document.querySelector('input[name="bubble"]:checked').value) || 0.5;
-            } else {
-            bubble = parseFloat(document.querySelector('input[name="bubbleHk"]:checked').value) || 0.3333;
-            }
+                    // 获取分泡比例
+                    let bubble = 0;
+                    if (billing === 0.006) {
+                        bubble = parseFloat(document.querySelector('input[name="bubble"]:checked').value) || 0.5;
+                    } else {
+                        bubble = parseFloat(document.querySelector('input[name="bubbleHk"]:checked').value) || 0.3333;
+                    }
 
-            // 输入验证
-            if (volume <= 0 || gw <= 0 || rmbPerKg <= 0) {
-            alert("请填写有效的体积、实际重量和RMB单价（均需大于0）");
-            return;
-            }
+                    // 输入验证
+                    if (volume <= 0 || gw <= 0 || rmbPerKg <= 0) {
+                        alert("请填写有效的体积、实际重量和RMB单价（均需大于0）");
+                        return;
+                    }
 
-            // 计算逻辑
-            const cw = volume / billing;
-            document.getElementById('cw').textContent = cw.toFixed(2);
+                    // 计算逻辑
+                    const cw = volume / billing;
+                    document.getElementById('cw').textContent = cw.toFixed(2);
 
-            const ratio = volume > 0 ? gw / volume : 0;
-            document.getElementById('ratio').textContent = ratio.toFixed(4);
+                    const ratio = volume > 0 ? gw / volume : 0;
+                    document.getElementById('ratio').textContent = ratio.toFixed(4);
 
-            const costWeight = gw + (cw - gw) * bubble;
-            document.getElementById('costWeight').textContent = costWeight.toFixed(2);
+                    const costWeight = gw + (cw - gw) * bubble;
+                    document.getElementById('costWeight').textContent = costWeight.toFixed(2);
 
-            const costUsdPerKg = exchangeRate > 0 ? rmbPerKg / exchangeRate : 0;
-            document.getElementById('usdPerKg').textContent = costUsdPerKg.toFixed(4);
+                    const costUsdPerKg = exchangeRate > 0 ? rmbPerKg / exchangeRate : 0;
+                    document.getElementById('usdPerKg').textContent = costUsdPerKg.toFixed(4);
 
-            const totalRMB = costWeight * rmbPerKg;
-            const totalUSD = costWeight * costUsdPerKg;
-            document.getElementById('totalRMB').textContent = totalRMB.toFixed(2);
-            document.getElementById('totalUSD').textContent = totalUSD.toFixed(2);
+                    const totalRMB = costWeight * rmbPerKg;
+                    const totalUSD = costWeight * costUsdPerKg;
+                    document.getElementById('totalRMB').textContent = totalRMB.toFixed(2);
+                    document.getElementById('totalUSD').textContent = totalUSD.toFixed(2);
 
-            const rmbAfter = cw > 0 ? totalRMB / cw : 0;
-            document.getElementById('rmbAfter').textContent = rmbAfter.toFixed(4);
+                    const rmbAfter = cw > 0 ? totalRMB / cw : 0;
+                    document.getElementById('rmbAfter').textContent = rmbAfter.toFixed(4);
 
-            const usdAfter = cw > 0 ? totalUSD / cw : 0;
-            document.getElementById('usdAfter').textContent = usdAfter.toFixed(4);
+                    const usdAfter = cw > 0 ? totalUSD / cw : 0;
+                    document.getElementById('usdAfter').textContent = usdAfter.toFixed(4);
 
-            } catch (e) {
-            alert("计算错误: " + e.message);
-            }
+                } catch (e) {
+                    alert("计算错误: " + e.message);
+                }
             }
         </script>
     </body>
