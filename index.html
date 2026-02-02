@@ -222,7 +222,7 @@
                 </tr>
                 <tr>
                     <td>USD/RMB汇率</td>
-                    <td><input type="number" id="exchangeRate" step="0.0001" value="6.95"></td>
+                    <td><input type="number" id="exchangeRate" step="0.0001" value="6.93"></td>
                     <td>成本计费重</td>
                     <td class="result" id="costWeight">-</td>
                 </tr>
@@ -331,7 +331,7 @@
                 try {
                     const volume = parseFloat(volumeInput.value) || 0;
                     const gw = parseFloat(gwInput.value) || 0;
-                    const exchangeRate = parseFloat(exchangeRateInput.value) || 6.95;
+                    const exchangeRate = parseFloat(exchangeRateInput.value) || 6.93;
                     const rmbPerKg = parseFloat(rmbPerKgInput.value) || 0;
 
                     // 获取计费标准和分泡比例
@@ -424,3 +424,4 @@
         </script>
     </body>
 </html>
+
