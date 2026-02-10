@@ -52,18 +52,6 @@
                 flex: 0 0 auto;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             }
-            /* 新增刷新汇率按钮样式 */
-            .refresh-rate-btn {
-                padding: 6px 10px;
-                background: #27ae60;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                font-size: 12px;
-                cursor: pointer;
-                margin-left: 10px;
-                height: 42px;
-            }
             .smart-input-section {
                 background-color: white;
                 border-radius: 8px;
@@ -197,13 +185,6 @@
                 min-height: 20px;
                 font-style: italic;
             }
-            /* 汇率更新提示样式 */
-            .rate-update-tip {
-                font-size: 12px;
-                color: #999;
-                margin-top: 5px;
-                text-align: right;
-            }
         </style>
     </head>
     <body>
@@ -241,13 +222,7 @@
                 </tr>
                 <tr>
                     <td>USD/RMB汇率</td>
-                    <td>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="number" id="exchangeRate" step="0.01" value="6.93">
-                            <button class="refresh-rate-btn" id="refreshRateBtn">刷新汇率</button>
-                        </div>
-                        <div class="rate-update-tip" id="rateUpdateTip">汇率同步自：算汇网招行现汇买入价</div>
-                    </td>
+                    <td><input type="number" id="exchangeRate" step="0.01" value="6.93"></td>
                     <td>成本计费重</td>
                     <td class="result" id="costWeight">-</td>
                 </tr>
@@ -316,8 +291,6 @@
             const rmbPerKgInput = document.getElementById('rmbPerKg');
             const smartInput = document.getElementById('smartInput');
             const statusMessage = document.getElementById('statusMessage');
-            const refreshRateBtn = document.getElementById('refreshRateBtn');
-            const rateUpdateTip = document.getElementById('rateUpdateTip');
 
             // 自动识别函数
             function autoParseSmartInput() {
@@ -416,55 +389,8 @@
                 }
             }
 
-            // 新增：抓取算汇网汇率并更新
-            async function fetchExchangeRate() {
-                try {
-                    statusMessage.textContent = '🔄 正在同步最新汇率...';
-                    refreshRateBtn.disabled = true;
-                    refreshRateBtn.textContent = '同步中...';
-
-                    // 抓取算汇网页面（使用CORS代理解决跨域问题）
-                    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.suanhui.com/zhaohang/');
-                    const response = await fetch(proxyUrl);
-                    const data = await response.json();
-                    const htmlContent = data.contents;
-
-                    // 正则提取招行美元现汇买入价（匹配：现汇买入<span>689.82</span>）
-                    const rateRegex = /现汇买入<\/td>\s*<td[^>]*>(\d+\.?\d*)<\/td>/i;
-                    const rateMatch = htmlContent.match(rateRegex);
-
-                    if (rateMatch && rateMatch[1]) {
-                        // 转换为汇率（689.82 → 6.8982，保留两位小数）
-                        const rawRate = parseFloat(rateMatch[1]);
-                        const exchangeRate = (rawRate / 100).toFixed(2);
-                        exchangeRateInput.value = exchangeRate;
-
-                        // 更新提示
-                        rateUpdateTip.textContent = `最新同步：招行现汇买入价 ${rawRate} → 汇率 ${exchangeRate}（${new Date().toLocaleTimeString()}）`;
-                        statusMessage.textContent = '✅ 汇率已同步最新值！';
-                        
-                        // 同步后自动计算
-                        calculate();
-                    } else {
-                        throw new Error('未找到现汇买入价');
-                    }
-
-                } catch (e) {
-                    console.error("汇率抓取失败: ", e);
-                    statusMessage.textContent = '⚠️ 汇率同步失败，使用默认值6.93';
-                    rateUpdateTip.textContent = '同步失败：网络问题或页面结构变更';
-                    exchangeRateInput.value = '6.93'; // 回退到默认值
-                } finally {
-                    refreshRateBtn.disabled = false;
-                    refreshRateBtn.textContent = '刷新汇率';
-                }
-            }
-
             // 页面加载完成后的事件绑定
             document.addEventListener('DOMContentLoaded', function() {
-                // 页面加载时自动同步汇率
-                fetchExchangeRate();
-
                 // 计费标准切换逻辑
                 const billingRadios = document.querySelectorAll('input[name="billing"]');
                 billingRadios.forEach(radio => {
@@ -492,12 +418,11 @@
                     input.addEventListener('blur', calculate);
                 });
 
-                // 绑定刷新汇率按钮事件
-                refreshRateBtn.addEventListener('click', fetchExchangeRate);
-
                 // 初始化状态
                 calculate();
             });
         </script>
     </body>
 </html>
+
+
