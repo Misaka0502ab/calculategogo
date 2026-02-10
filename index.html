@@ -52,7 +52,7 @@
                 flex: 0 0 auto;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             }
-            /* 刷新汇率按钮样式 */
+            /* 新增刷新汇率按钮样式 */
             .refresh-rate-btn {
                 padding: 6px 10px;
                 background: #27ae60;
@@ -63,10 +63,6 @@
                 cursor: pointer;
                 margin-left: 10px;
                 height: 42px;
-            }
-            .refresh-rate-btn:disabled {
-                background: #95a5a6;
-                cursor: not-allowed;
             }
             .smart-input-section {
                 background-color: white;
@@ -192,7 +188,7 @@
                 border-bottom: 1px solid #eee;
             }
             .hidden { display: none !important; }
-            /* 状态提示样式 */
+            /* 新增状态提示样式 */
             .status-message {
                 text-align: center;
                 font-size: 14px;
@@ -207,12 +203,6 @@
                 color: #999;
                 margin-top: 5px;
                 text-align: right;
-            }
-            /* 汇率同步失败提示 */
-            .rate-error-tip {
-                color: #e74c3c;
-                font-size: 12px;
-                margin-top: 3px;
             }
         </style>
     </head>
@@ -256,8 +246,7 @@
                             <input type="number" id="exchangeRate" step="0.01" value="6.93">
                             <button class="refresh-rate-btn" id="refreshRateBtn">刷新汇率</button>
                         </div>
-                        <div class="rate-update-tip" id="rateUpdateTip">汇率同步自：招商银行官方接口</div>
-                        <div class="rate-error-tip" id="rateErrorTip"></div>
+                        <div class="rate-update-tip" id="rateUpdateTip">汇率同步自：算汇网招行现汇买入价</div>
                     </td>
                     <td>成本计费重</td>
                     <td class="result" id="costWeight">-</td>
@@ -316,10 +305,11 @@
                     </div>
                 </div>
             </div>
+            <!-- 原计算按钮已移除 -->
         </div>
 
         <script>
-            // 获取核心元素
+            // 获取输入元素和状态提示元素
             const volumeInput = document.getElementById('volume');
             const gwInput = document.getElementById('gw');
             const exchangeRateInput = document.getElementById('exchangeRate');
@@ -328,29 +318,24 @@
             const statusMessage = document.getElementById('statusMessage');
             const refreshRateBtn = document.getElementById('refreshRateBtn');
             const rateUpdateTip = document.getElementById('rateUpdateTip');
-            const rateErrorTip = document.getElementById('rateErrorTip');
 
-            // 多CORS代理配置（兜底使用）
-            const corsProxies = [
-                'https://api.allorigins.win/get?url=',
-                'https://cors.isteed.cc/?url=',
-                'https://proxy.cors.sh/?url='
-            ];
-
-            // 自动识别重量体积
+            // 自动识别函数
             function autoParseSmartInput() {
                 try {
                     const inputText = smartInput.value.trim();
                     if (!inputText) return;
 
+                    // 正则提取重量
                     const weightRegex = /(\d+\.?\d*)\s*(?:kgs?|千克|公斤)/i;
                     const weightMatch = inputText.match(weightRegex);
                     const weight = weightMatch ? parseFloat(weightMatch[1]) : null;
 
+                    // 正则提取体积
                     const volumeRegex = /(\d+\.?\d*)\s*(?:cbm|立方米|m³|m3)/i;
                     const volumeMatch = inputText.match(volumeRegex);
                     const volume = volumeMatch ? parseFloat(volumeMatch[1]) : null;
 
+                    // 填充到对应输入框
                     if (weight) {
                         gwInput.value = weight.toFixed(3);
                         statusMessage.textContent = `✅ 已识别重量: ${weight}kgs`;
@@ -360,7 +345,9 @@
                         statusMessage.textContent += volume ? ` 体积: ${volume}cbm` : '';
                     }
 
+                    // 识别后立即触发自动计算
                     setTimeout(calculate, 100);
+
                 } catch (e) {
                     console.log("自动识别失败：" + e.message);
                 }
@@ -374,6 +361,7 @@
                     const exchangeRate = parseFloat(exchangeRateInput.value) || 6.93;
                     const rmbPerKg = parseFloat(rmbPerKgInput.value) || 0;
 
+                    // 获取计费标准和分泡比例
                     const billing = parseFloat(document.querySelector('input[name="billing"]:checked').value) || 0.006;
                     let bubble = 0;
                     if (billing === 0.006) {
@@ -382,9 +370,11 @@
                         bubble = parseFloat(document.querySelector('input[name="bubbleHk"]:checked').value) || 0.3333;
                     }
 
+                    // 基础验证
                     const hasBasicInput = volume > 0 && gw > 0;
                     const hasPrice = rmbPerKg > 0;
 
+                    // 更新状态提示
                     if (!hasBasicInput) {
                         statusMessage.textContent = '请填写体积和实际重量';
                         return;
@@ -395,6 +385,7 @@
                         statusMessage.textContent = '✅ 计算完成（所有数据实时更新）';
                     }
 
+                    // 计算并显示基础结果
                     const cw = volume / billing;
                     document.getElementById('cw').textContent = hasBasicInput ? cw.toFixed(2) : '-';
 
@@ -404,6 +395,7 @@
                     const costWeight = gw + (cw - gw) * bubble;
                     document.getElementById('costWeight').textContent = hasBasicInput ? costWeight.toFixed(2) : '-';
 
+                    // 计算并显示成本结果
                     const costUsdPerKg = exchangeRate > 0 ? rmbPerKg / exchangeRate : 0;
                     document.getElementById('usdPerKg').textContent = hasPrice ? costUsdPerKg.toFixed(4) : '-';
 
@@ -424,86 +416,67 @@
                 }
             }
 
-            // 核心：稳定获取招行美元现汇买入价
+            // 新增：抓取算汇网汇率并更新
             async function fetchExchangeRate() {
-                // 重置提示
-                rateErrorTip.textContent = '';
-                statusMessage.textContent = '🔄 正在同步招行最新汇率...';
-                refreshRateBtn.disabled = true;
-                refreshRateBtn.textContent = '同步中...';
+                try {
+                    statusMessage.textContent = '🔄 正在同步最新汇率...';
+                    refreshRateBtn.disabled = true;
+                    refreshRateBtn.textContent = '同步中...';
 
-                // 招行官方汇率接口（美元现汇买入价）
-                const cmbApi = 'https://fx.cmbchina.com/hq/';
-                
-                // 尝试多个代理，提高成功率
-                for (let i = 0; i < corsProxies.length; i++) {
-                    try {
-                        const proxyUrl = corsProxies[i] + encodeURIComponent(cmbApi);
-                        const response = await fetch(proxyUrl, {
-                            method: 'GET',
-                            timeout: 8000, // 8秒超时
-                            headers: {
-                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                            }
-                        });
+                    // 抓取算汇网页面（使用CORS代理解决跨域问题）
+                    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.suanhui.com/zhaohang/');
+                    const response = await fetch(proxyUrl);
+                    const data = await response.json();
+                    const htmlContent = data.contents;
 
-                        if (!response.ok) throw new Error(`代理${i+1}响应失败`);
+                    // 正则提取招行美元现汇买入价（匹配：现汇买入<span>689.82</span>）
+                    const rateRegex = /现汇买入<\/td>\s*<td[^>]*>(\d+\.?\d*)<\/td>/i;
+                    const rateMatch = htmlContent.match(rateRegex);
+
+                    if (rateMatch && rateMatch[1]) {
+                        // 转换为汇率（689.82 → 6.8982，保留两位小数）
+                        const rawRate = parseFloat(rateMatch[1]);
+                        const exchangeRate = (rawRate / 100).toFixed(2);
+                        exchangeRateInput.value = exchangeRate;
+
+                        // 更新提示
+                        rateUpdateTip.textContent = `最新同步：招行现汇买入价 ${rawRate} → 汇率 ${exchangeRate}（${new Date().toLocaleTimeString()}）`;
+                        statusMessage.textContent = '✅ 汇率已同步最新值！';
                         
-                        const data = await response.json();
-                        const htmlContent = data.contents || data;
-
-                        // 提取美元现汇买入价（适配招行页面结构）
-                        // 匹配规则：美元 USD 现汇买入 对应的数值
-                        const rateRegex = /USD.*?现汇买入.*?<span[^>]*>([\d\.]+)<\/span>/i;
-                        const rateMatch = htmlContent.match(rateRegex);
-
-                        if (rateMatch && rateMatch[1]) {
-                            // 转换为汇率（如689.82 → 6.8982 → 保留两位小数）
-                            const rawRate = parseFloat(rateMatch[1]);
-                            const exchangeRate = (rawRate / 100).toFixed(2);
-                            
-                            // 更新页面
-                            exchangeRateInput.value = exchangeRate;
-                            rateUpdateTip.textContent = `✅ 同步成功：招行美元现汇买入价 ${rawRate} → 汇率 ${exchangeRate}（${new Date().toLocaleTimeString()}）`;
-                            statusMessage.textContent = '✅ 汇率已同步最新值！';
-                            
-                            // 同步后自动计算
-                            calculate();
-                            return; // 成功后退出循环
-                        }
-                    } catch (e) {
-                        console.log(`代理${i+1}失败:`, e.message);
-                        continue; // 尝试下一个代理
+                        // 同步后自动计算
+                        calculate();
+                    } else {
+                        throw new Error('未找到现汇买入价');
                     }
-                }
 
-                // 所有代理都失败的兜底处理
-                throw new Error('所有代理均无法获取招行汇率，请检查网络或手动输入');
-            }
-
-            // 页面加载完成初始化
-            document.addEventListener('DOMContentLoaded', function() {
-                // 页面加载时自动同步汇率
-                fetchExchangeRate().catch(err => {
-                    rateErrorTip.textContent = err.message;
+                } catch (e) {
+                    console.error("汇率抓取失败: ", e);
                     statusMessage.textContent = '⚠️ 汇率同步失败，使用默认值6.93';
-                    exchangeRateInput.value = '6.93';
-                }).finally(() => {
+                    rateUpdateTip.textContent = '同步失败：网络问题或页面结构变更';
+                    exchangeRateInput.value = '6.93'; // 回退到默认值
+                } finally {
                     refreshRateBtn.disabled = false;
                     refreshRateBtn.textContent = '刷新汇率';
-                });
+                }
+            }
 
-                // 计费标准切换
-                document.querySelectorAll('input[name="billing"]').forEach(radio => {
+            // 页面加载完成后的事件绑定
+            document.addEventListener('DOMContentLoaded', function() {
+                // 页面加载时自动同步汇率
+                fetchExchangeRate();
+
+                // 计费标准切换逻辑
+                const billingRadios = document.querySelectorAll('input[name="billing"]');
+                billingRadios.forEach(radio => {
                     radio.addEventListener('change', function() {
                         const isMainland = this.value === "0.006";
                         document.getElementById('mainlandBubble').classList.toggle('hidden', !isMainland);
                         document.getElementById('hongkongBubble').classList.toggle('hidden', isMainland);
-                        calculate();
+                        calculate(); // 切换后自动计算
                     });
                 });
 
-                // 分泡比例切换
+                // 分泡比例切换逻辑
                 document.querySelectorAll('input[name="bubble"], input[name="bubbleHk"]').forEach(radio => {
                     radio.addEventListener('change', calculate);
                 });
@@ -512,24 +485,17 @@
                 smartInput.addEventListener('input', autoParseSmartInput);
                 smartInput.addEventListener('blur', autoParseSmartInput);
 
-                // 自动计算事件
-                [volumeInput, gwInput, exchangeRateInput, rmbPerKgInput].forEach(input => {
+                // 为所有关键输入框绑定输入事件（自动计算的核心）
+                const autoCalcInputs = [volumeInput, gwInput, exchangeRateInput, rmbPerKgInput];
+                autoCalcInputs.forEach(input => {
                     input.addEventListener('input', calculate);
                     input.addEventListener('blur', calculate);
                 });
 
-                // 手动刷新汇率
-                refreshRateBtn.addEventListener('click', () => {
-                    fetchExchangeRate().catch(err => {
-                        rateErrorTip.textContent = err.message;
-                        statusMessage.textContent = '⚠️ 汇率同步失败，保留当前值';
-                    }).finally(() => {
-                        refreshRateBtn.disabled = false;
-                        refreshRateBtn.textContent = '刷新汇率';
-                    });
-                });
+                // 绑定刷新汇率按钮事件
+                refreshRateBtn.addEventListener('click', fetchExchangeRate);
 
-                // 初始化计算
+                // 初始化状态
                 calculate();
             });
         </script>
