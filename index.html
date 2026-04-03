@@ -2,322 +2,184 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 优化viewport：适配各种手机屏幕 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>空运成本计算器（分泡版）</title>
+    <title>空运成本计算器（分泡版+提货费）</title>
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; /* 去除移动端点击高亮 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', sans-serif;
-            color: #333;
-            width: 100%;
-            min-height: 100vh;
-            padding: 12px 10px;  /* 优化边距 */
-            background-color: #f5f5f5;
-            font-size: 15px;
+            background: #f5f5f5;
+            padding: 12px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        
+
         h1 {
             color: #2c3e50;
+            font-size: 20px;
             text-align: center;
             margin-bottom: 15px;
-            padding-bottom: 10px;
             border-bottom: 2px solid #3498db;
-            font-size: 20px;
-            font-weight: bold;
-            width: 100%;
+            padding-bottom: 10px;
             max-width: 600px;
+            width: 100%;
         }
-        
-        /* 工具栏优化 */
+
         .tool-buttons-container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: flex-start;
             gap: 6px;
             margin-bottom: 12px;
-            width: 100%;
             max-width: 600px;
+            width: 100%;
         }
-        
+
         .tool-button {
-            display: inline-block;
-            padding: 8px 12px;
             background: #0066cc;
             color: white;
-            text-decoration: none;
+            padding: 8px 12px;
             border-radius: 8px;
             font-size: 13px;
-            font-weight: 500;
+            text-decoration: none;
             white-space: nowrap;
-            text-align: center;
-            flex: 0 1 auto;
-            box-shadow: 0 2px 4px rgba(0,102,204,0.2);
-            transition: background-color 0.2s;
+            transition: 0.2s;
         }
-        
+
         .tool-button:active {
             background: #0052a3;
             transform: scale(0.98);
         }
-        
-        /* 智能输入区域优化 */
+
         .smart-input-section {
-            background-color: white;
+            background: white;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             padding: 12px;
-            margin: 10px 0 15px 0;
-            width: 100%;
+            margin: 10px 0;
             max-width: 600px;
+            width: 100%;
         }
-        
+
         .smart-input-title {
             font-weight: 600;
             color: #16a085;
-            margin: 0 0 6px 0;
-            font-size: 15px;
+            margin-bottom: 6px;
         }
-        
+
         .smart-input-box {
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 14px;
-            height: 44px;
-            background-color: #fafafa;
-            transition: all 0.2s;
         }
-        
-        .smart-input-box:focus {
-            border-color: #3498db;
-            background-color: white;
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
-        }
-        
-        /* 计算器主区域优化 */
+
         .calculator {
-            background-color: white;
+            background: white;
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             padding: 16px;
             margin-bottom: 20px;
-            width: 100%;
             max-width: 600px;
+            width: 100%;
         }
-        
-        /* 表格优化 */
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 10px 0;
             font-size: 14px;
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        
+
         th, td {
             border: 1px solid #eaeef2;
             padding: 8px 6px;
             text-align: left;
+            font-weight: 500;      /* ← 这一行就是控制表头粗细的 */
         }
-        
+
         td:first-child {
-            background-color: #f8fafd;
+            background: #f8fafd;
             font-weight: 500;
             width: 30%;
         }
-        
-        td:nth-child(2) {
-            width: 30%;
-        }
-        
-        td:nth-child(3) {
-            width: 20%;
-            background-color: #f8fafd;
-            font-weight: 500;
-        }
-        
-        td:last-child {
-            width: 20%;
-        }
-        
-        /* 输入框优化 */
-        input {
-            width: 100%;
-            padding: 8px 8px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            height: 38px;
-            background-color: #fafafa;
-            transition: all 0.2s;
-        }
-        
-        input:focus { 
-            border-color: #3498db; 
-            outline: none;
-            background-color: white;
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
-        }
-        
-        input::placeholder { 
-            font-size: 12px; 
-            color: #aaa; 
-        }
-        
-        /* 结果单元格优化 */
+
         .result {
             font-weight: 600;
             color: #2980b9;
-            background-color: #e8f4fd;
+            background: #e8f4fd;
             text-align: center;
-            font-size: 14px;
-            padding: 8px 0;
-            border-radius: 0;
         }
-        
-        /* 选项区域优化 */
-        .billing-bubble-container {
-            display: flex;
-            gap: 12px;
-            margin: 15px 0 5px;
+
+        input {
             width: 100%;
-            flex-wrap: wrap;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
         }
-        
-        .billing-section, .bubble-section {
-            flex: 1;
-            min-width: 200px;
+
+        input:focus {
+            border-color: #3498db;
+            outline: none;
         }
-        
+
         .section-title {
             font-weight: 600;
             color: #16a085;
-            margin: 10px 0 6px 0;
-            font-size: 15px;
-            padding-bottom: 4px;
+            margin: 15px 0 6px 0;
             border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 4px;
         }
-        
+
         .option-group {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
             margin: 8px 0;
             padding: 8px;
-            background-color: #f8f9fa;
+            background: #f8f9fa;
             border-radius: 10px;
         }
-        
+
         .option-group label {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 4px;
             padding: 8px 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
+            background: white;
             cursor: pointer;
-            font-size: 14px;
-            background-color: white;
-            transition: all 0.2s;
-            flex: 1 1 auto;
-            min-width: 70px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
-        
-        .option-group label:active {
-            background-color: #e3f2fd;
-            transform: scale(0.98);
+
+        .hidden {
+            display: none !important;
         }
-        
-        .option-group input[type="radio"] {
-            width: 16px;
-            height: 16px;
-            margin: 0;
-            padding: 0;
-            accent-color: #16a085; /* 美化单选按钮 */
-        }
-        
-        .hidden { display: none !important; }
-        
+
         .status-message {
             text-align: center;
             font-size: 13px;
             color: #7f8c8d;
-            margin: 5px 0 10px;
-            min-height: 20px;
-            font-style: italic;
-            background-color: #f8f9fa;
-            padding: 6px 10px;
+            margin: 5px 0;
+            padding: 6px;
+            background: #f8f9fa;
             border-radius: 20px;
         }
-        
-        /* 针对超小屏幕的优化 */
+
         @media (max-width: 380px) {
-            body {
-                padding: 8px 6px;
-            }
-            
-            .calculator {
-                padding: 12px;
-            }
-            
-            td {
-                padding: 6px 4px;
-                font-size: 13px;
-            }
-            
-            .option-group label {
-                padding: 6px 6px;
-                font-size: 13px;
-                min-width: 60px;
-            }
-            
-            h1 {
-                font-size: 18px;
-            }
-            
-            .tool-button {
-                padding: 6px 8px;
-                font-size: 12px;
-            }
-        }
-        
-        /* 针对大屏幕的优化 */
-        @media (min-width: 600px) {
-            body {
-                padding: 20px;
-            }
-            
-            .calculator {
-                padding: 24px;
-            }
-            
-            td {
-                padding: 12px 10px;
-                font-size: 15px;
-            }
+            td { font-size: 13px; padding: 6px 4px; }
+            .option-group label { font-size: 13px; padding: 6px; }
         }
     </style>
 </head>
 <body>
-<h1>空运成本计算器（分泡版）</h1>
+<h1>✈️ 空运成本计算器（分泡版+提货费）</h1>
 
 <div class="tool-buttons-container">
     <a href="https://www.track-trace.com/" target="_blank" class="tool-button">物流跟踪</a>
@@ -328,217 +190,158 @@
 
 <div class="smart-input-section">
     <div class="smart-input-title">📦 智能识别</div>
-    <input type="text" class="smart-input-box" id="smartInput" placeholder="例：250kgs / 0.75cbm">
+    <input type="text" class="smart-input-box" id="smartInput" placeholder="250kgs / 0.75cbm">
 </div>
 
 <div class="calculator">
     <div class="status-message" id="statusMessage">请输入体积和重量</div>
 
-    <div class="section-title">基础参数</div>
+    <div class="section-title">📊 基础参数</div>
     <table>
-        <tr>
-            <td>体积(m³)</td>
-            <td><input type="number" id="volume" step="0.01" placeholder="0.00"></td>
-            <td>计费重</td>
-            <td class="result" id="cw">-</td>
-        </tr>
-        <tr>
-            <td>重量(kg)</td>
-            <td><input type="number" id="gw" step="0.01" placeholder="0.00"></td>
-            <td>比重</td>
-            <td class="result" id="ratio">-</td>
-        </tr>
-        <tr>
-            <td>汇率</td>
-            <td><input type="number" id="exchangeRate" step="0.01" value="6.85"></td>
-            <td>成本重</td>
-            <td class="result" id="costWeight">-</td>
-        </tr>
+        <tr><th>体积(m³)</th><td><input type="number" id="volume" step="0.01"></td><th>泡重</th><td class="result" id="cw">-</td></tr>
+        <tr><th>重量(KG)</th><td><input type="number" id="gw" step="0.01"></td><th>比重</th><td class="result" id="ratio">-</td></tr>
+        <tr><th>汇率</th><td><input type="number" id="exchangeRate" step="0.01" value="6.85"></td><th>成本重</th><td class="result" id="costWeight">-</td></tr>
+        <tr><th>提货费(RMB/KG)</th><td><input type="number" id="pickupRateRMB" step="0.01" placeholder=""></td>
+            <th>提货费(USD/KG)</th><td class="result" id="pickupRateUSD">-</td></tr>
+        <tr><th>提货费(RMB)</th><td class="result" id="pickupRMB">-</td>
+            <th>提货费(USD)</th><td class="result" id="pickupUSD">-</td></tr>
     </table>
 
-    <div class="section-title">成本单价</div>
+    <div class="section-title">💰 成本单价</div>
     <table>
-        <tr>
-            <td>RMB/kg</td>
-            <td><input type="number" id="rmbPerKg" step="0.01" placeholder="输入单价"></td>
-            <td>泡后RMB</td>
-            <td class="result" id="rmbAfter">-</td>
-        </tr>
-        <tr>
-            <td>USD/kg</td>
-            <td class="result" id="usdPerKg">-</td>
-            <td>泡后USD</td>
-            <td class="result" id="usdAfter">-</td>
-        </tr>
+        <tr><th>RMB/KG</th><td><input type="number" id="rmbPerKg" step="0.01"></td><th>泡后RMB</th><td class="result" id="rmbAfter">-</td></tr>
+        <tr><th>USD/KG</th><td class="result" id="usdPerKg">-</td><th>泡后USD</th><td class="result" id="usdAfter">-</td></tr>
     </table>
 
-    <div class="section-title">总成本</div>
+    <div class="section-title">💵 总成本</div>
     <table>
-        <tr>
-            <td colspan="2"></td>
-            <td>总成本RMB</td>
-            <td class="result" id="totalRMB">-</td>
-        </tr>
-        <tr>
-            <td colspan="2"></td>
-            <td>总成本USD</td>
-            <td class="result" id="totalUSD">-</td>
-        </tr>
+        <tr><th colspan="2">总成本RMB</th><td class="result" id="totalRMB">-</td></tr>
+        <tr><th colspan="2">总成本USD</th><td class="result" id="totalUSD">-</td></tr>
     </table>
 
     <div class="billing-bubble-container">
-        <div class="billing-section">
-            <div class="section-title">计费标准</div>
+        <div><div class="section-title">🌏 计费标准</div>
             <div class="option-group">
-                <label><input type="radio" name="billing" value="0.006" checked><span>大陆(167)</span></label>
-                <label><input type="radio" name="billing" value="0.007"><span>香港(143)</span></label>
-            </div>
-        </div>
-        <div class="bubble-section">
-            <div class="section-title">分泡比例</div>
+                <label><input type="radio" name="billing" value="0.006" checked> 大陆(167)</label>
+                <label><input type="radio" name="billing" value="0.007"> 香港(143)</label>
+            </div></div>
+        <div><div class="section-title">🎈 分泡比例</div>
             <div class="option-group" id="mainlandBubble">
-                <label><input type="radio" name="bubble" value="0.5" checked><span>55分</span></label>
-                <label><input type="radio" name="bubble" value="0.4"><span>46分</span></label>
-                <label><input type="radio" name="bubble" value="0.3"><span>37分</span></label>
-                <label><input type="radio" name="bubble" value="0.2"><span>28分</span></label>
+                <label><input type="radio" name="bubble" value="0.5" checked> 55分</label>
+                <label><input type="radio" name="bubble" value="0.4"> 46分</label>
+                <label><input type="radio" name="bubble" value="0.3"> 37分</label>
+                <label><input type="radio" name="bubble" value="0.2"> 28分</label>
             </div>
             <div class="option-group hidden" id="hongkongBubble">
-                <label><input type="radio" name="bubbleHk" value="0.3333" checked><span>1/3分</span></label>
-                <label><input type="radio" name="bubbleHk" value="0.6667"><span>2/3分</span></label>
-            </div>
-        </div>
+                <label><input type="radio" name="bubbleHk" value="0.3333" checked> 1/3分</label>
+                <label><input type="radio" name="bubbleHk" value="0.6667"> 2/3分</label>
+            </div></div>
     </div>
 </div>
 
 <script>
-    // 获取输入元素
     const volumeInput = document.getElementById('volume');
     const gwInput = document.getElementById('gw');
     const exchangeRateInput = document.getElementById('exchangeRate');
     const rmbPerKgInput = document.getElementById('rmbPerKg');
+    const pickupRateRMBInput = document.getElementById('pickupRateRMB');
     const smartInput = document.getElementById('smartInput');
     const statusMessage = document.getElementById('statusMessage');
 
-    // 自动识别函数
     function autoParseSmartInput() {
-        try {
-            const inputText = smartInput.value.trim();
-            if (!inputText) return;
-
-            const weightRegex = /(\d+\.?\d*)\s*(?:kgs?|千克|公斤)/i;
-            const weightMatch = inputText.match(weightRegex);
-            const weight = weightMatch ? parseFloat(weightMatch[1]) : null;
-
-            const volumeRegex = /(\d+\.?\d*)\s*(?:cbm|立方米|m³|m3)/i;
-            const volumeMatch = inputText.match(volumeRegex);
-            const volume = volumeMatch ? parseFloat(volumeMatch[1]) : null;
-
-            if (weight) {
-                gwInput.value = weight.toFixed(2);
-                statusMessage.textContent = `✅ 已识别: ${weight.toFixed(2)}kg`;
-            }
-            if (volume) {
-                volumeInput.value = volume.toFixed(2);
-                statusMessage.textContent += volume ? ` / ${volume.toFixed(2)}m³` : '';
-            }
-
-            setTimeout(calculate, 100);
-        } catch (e) {
-            console.log("识别失败：" + e.message);
-        }
+        const text = smartInput.value.trim();
+        if (!text) return;
+        const weightMatch = text.match(/(\d+\.?\d*)\s*(?:kgs?|千克|公斤)/i);
+        const volumeMatch = text.match(/(\d+\.?\d*)\s*(?:cbm|立方米|m³|m3)/i);
+        if (weightMatch) gwInput.value = parseFloat(weightMatch[1]).toFixed(2);
+        if (volumeMatch) volumeInput.value = parseFloat(volumeMatch[1]).toFixed(2);
+        calculate();
     }
 
-    // 计算逻辑
     function calculate() {
         try {
             const volume = parseFloat(volumeInput.value) || 0;
             const gw = parseFloat(gwInput.value) || 0;
             const exchangeRate = parseFloat(exchangeRateInput.value) || 6.85;
             const rmbPerKg = parseFloat(rmbPerKgInput.value) || 0;
+            const pickupRateRMB = parseFloat(pickupRateRMBInput.value) || 0;
 
-            const billing = parseFloat(document.querySelector('input[name="billing"]:checked').value) || 0.006;
+            const billing = parseFloat(document.querySelector('input[name="billing"]:checked')?.value) || 0.006;
             let bubble = 0;
             if (billing === 0.006) {
-                bubble = parseFloat(document.querySelector('input[name="bubble"]:checked').value) || 0.5;
+                bubble = parseFloat(document.querySelector('input[name="bubble"]:checked')?.value) || 0.5;
             } else {
-                bubble = parseFloat(document.querySelector('input[name="bubbleHk"]:checked').value) || 0.3333;
+                bubble = parseFloat(document.querySelector('input[name="bubbleHk"]:checked')?.value) || 0.3333;
             }
 
-            const hasBasicInput = volume > 0 && gw > 0;
+            const hasBasic = volume > 0 && gw > 0;
             const hasPrice = rmbPerKg > 0;
 
-            if (!hasBasicInput) {
-                statusMessage.textContent = '请输入体积和重量';
-                document.getElementById('cw').textContent = '-';
-                document.getElementById('ratio').textContent = '-';
-                document.getElementById('costWeight').textContent = '-';
-                document.getElementById('usdPerKg').textContent = '-';
-                document.getElementById('rmbAfter').textContent = '-';
-                document.getElementById('usdAfter').textContent = '-';
-                document.getElementById('totalRMB').textContent = '-';
-                document.getElementById('totalUSD').textContent = '-';
+            if (!hasBasic) {
+                statusMessage.innerText = '请输入体积和重量';
+                ['cw','ratio','costWeight','usdPerKg','rmbAfter','usdAfter','totalRMB','totalUSD','pickupRateUSD','pickupRMB','pickupUSD'].forEach(id => document.getElementById(id).innerText = '-');
                 return;
             }
-            
-            if (!hasPrice) {
-                statusMessage.textContent = '已计算基础参数，请输入RMB单价';
-            } else {
-                statusMessage.textContent = '✅ 计算完成';
-            }
+
+            statusMessage.innerText = hasPrice ? '✅ 计算完成' : '已计算基础参数，请输入RMB单价';
 
             const cw = volume / billing;
-            document.getElementById('cw').textContent = cw.toFixed(2);
+            document.getElementById('cw').innerText = cw.toFixed(2);
 
-            const ratio = volume > 0 ? gw / volume : 0;
-            document.getElementById('ratio').textContent = ratio.toFixed(2);
+            const ratio = volume ? gw / volume : 0;
+            document.getElementById('ratio').innerText = ratio.toFixed(2);
 
             const costWeight = gw + (cw - gw) * bubble;
-            document.getElementById('costWeight').textContent = costWeight.toFixed(2);
+            document.getElementById('costWeight').innerText = costWeight.toFixed(2);
 
-            const costUsdPerKg = exchangeRate > 0 ? rmbPerKg / exchangeRate : 0;
-            document.getElementById('usdPerKg').textContent = hasPrice ? costUsdPerKg.toFixed(2) : '-';
+            const costUsdPerKg = exchangeRate ? rmbPerKg / exchangeRate : 0;
+            document.getElementById('usdPerKg').innerText = hasPrice ? costUsdPerKg.toFixed(2) : '-';
 
             const totalRMB = costWeight * rmbPerKg;
             const totalUSD = costWeight * costUsdPerKg;
-            document.getElementById('totalRMB').textContent = hasPrice ? totalRMB.toFixed(2) : '-';
-            document.getElementById('totalUSD').textContent = hasPrice ? totalUSD.toFixed(2) : '-';
+            document.getElementById('totalRMB').innerText = hasPrice ? totalRMB.toFixed(2) : '-';
+            document.getElementById('totalUSD').innerText = hasPrice ? totalUSD.toFixed(2) : '-';
 
-            const rmbAfter = cw > 0 ? totalRMB / cw : 0;
-            document.getElementById('rmbAfter').textContent = hasPrice ? rmbAfter.toFixed(2) : '-';
+            const rmbAfter = cw ? totalRMB / cw : 0;
+            document.getElementById('rmbAfter').innerText = hasPrice ? rmbAfter.toFixed(2) : '-';
+            const usdAfter = cw ? totalUSD / cw : 0;
+            document.getElementById('usdAfter').innerText = hasPrice ? usdAfter.toFixed(2) : '-';
 
-            const usdAfter = cw > 0 ? totalUSD / cw : 0;
-            document.getElementById('usdAfter').textContent = hasPrice ? usdAfter.toFixed(2) : '-';
+            // ========= 提货费单价USD（自动换算）=========
+            const pickupRateUSD = exchangeRate ? pickupRateRMB / exchangeRate : 0;
+            document.getElementById('pickupRateUSD').innerText = pickupRateRMB > 0 ? pickupRateUSD.toFixed(4) : '-';
 
-        } catch (e) {
-            statusMessage.textContent = '计算错误';
+            // ========= 提货费计算（固定系数200）=========
+            let pickupRMB = 0;
+            if (pickupRateRMB > 0 && volume > 0 && gw > 0) {
+                if (cw > gw) {
+                    pickupRMB = volume * 200 * pickupRateRMB;
+                } else {
+                    pickupRMB = gw * pickupRateRMB;
+                }
+            }
+            const pickupUSD = exchangeRate ? pickupRMB / exchangeRate : 0;
+            document.getElementById('pickupRMB').innerText = pickupRMB > 0 ? pickupRMB.toFixed(2) : '-';
+            document.getElementById('pickupUSD').innerText = pickupUSD > 0 ? pickupUSD.toFixed(2) : '-';
+
+        } catch(e) {
+            statusMessage.innerText = '计算错误';
             console.error(e);
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const billingRadios = document.querySelectorAll('input[name="billing"]');
-        billingRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                const isMainland = this.value === "0.006";
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[name="billing"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const isMainland = radio.value === "0.006";
                 document.getElementById('mainlandBubble').classList.toggle('hidden', !isMainland);
                 document.getElementById('hongkongBubble').classList.toggle('hidden', isMainland);
                 calculate();
             });
         });
-
-        document.querySelectorAll('input[name="bubble"], input[name="bubbleHk"]').forEach(radio => {
-            radio.addEventListener('change', calculate);
-        });
-
+        document.querySelectorAll('input[name="bubble"], input[name="bubbleHk"]').forEach(r => r.addEventListener('change', calculate));
         smartInput.addEventListener('input', autoParseSmartInput);
-        smartInput.addEventListener('blur', autoParseSmartInput);
-
-        const autoCalcInputs = [volumeInput, gwInput, exchangeRateInput, rmbPerKgInput];
-        autoCalcInputs.forEach(input => {
-            input.addEventListener('input', calculate);
-            input.addEventListener('blur', calculate);
-        });
-
+        [volumeInput, gwInput, exchangeRateInput, rmbPerKgInput, pickupRateRMBInput].forEach(i => i.addEventListener('input', calculate));
         calculate();
     });
 </script>
